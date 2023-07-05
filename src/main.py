@@ -1,15 +1,10 @@
-from mk_directed import mk_directed
-from parse_state_tree import parse_state_tree
-from rm_duplicates import rm_duplicates
-from map_clone_trees import map_clone_trees
-from get_clone_trees import get_clone_trees
-from get_cn_clones import get_cn_clones
-from collapse import collapse
-from get_prufer_edges import get_prufer_edges
-from is_valid_tree import is_valid_tree
-from map_single_clone_tree import map_single_clone_tree
-from plot_fractions import plot_fractions
-from plot_violation import plot_violation
+
+from parse_inputs import parse_state_tree, get_cn_clones
+from get_clone_trees import mk_directed, get_clone_trees
+from check_tree import map_clone_trees, is_valid_tree
+from parse_inputs import get_cn_clones
+from collapse import collapse, rm_duplicates
+from plot import plot_fractions, plot_violation
 import pandas as pd
 import numpy as np
 from itertools import product
