@@ -6,26 +6,36 @@ from parse_inputs import get_cn_clones
 from collapse import collapse, rm_duplicates
 from plot import plot_fractions, plot_violation
 import pandas as pd
+import argparse
 import numpy as np
-from itertools import product
 from matplotlib import pyplot as plt
 
-#k14_output is the entire tsv file
-k14_output = pd.read_csv('/Users/kyletsai/Desktop/SUMMER_2023/decifer/RA17_22_output/MPAM06_output_K14.tsv', sep='\t')
-#print(k14_output)
-num_rows = len(k14_output.index)
-#best_input is the tsv file of the input (with mutation bins and copy number clones)
-best_input = pd.read_csv('/Users/kyletsai/Desktop/SUMMER_2023/decifer/RA17_22_input/best.seg.ucn.tsv', sep='\t')
-#df_vcf is the existing mutation file as a dataframe
-df_vcf = pd.read_csv('/Users/kyletsai/Desktop/SUMMER_2023/decifer/Proj_06287_Q__RA17_22___SOMATIC.MuTect2.vep.FILLOUT.flt.noFFPE.JAM_filtered.vcf', 
-                     comment='#', sep='\t', header=None)  
+# #k14_output is the entire tsv file
+# k14_output = pd.read_csv('/Users/kyletsai/Desktop/SUMMER_2023/decifer/RA17_22_output/MPAM06_output_K14.tsv', sep='\t')
+# #print(k14_output)
+# num_rows = len(k14_output.index)
+# #best_input is the tsv file of the input (with mutation bins and copy number clones)
+# best_input = pd.read_csv('/Users/kyletsai/Desktop/SUMMER_2023/decifer/RA17_22_input/best.seg.ucn.tsv', sep='\t')
+# #df_vcf is the existing mutation file as a dataframe
+# df_vcf = pd.read_csv('/Users/kyletsai/Desktop/SUMMER_2023/decifer/Proj_06287_Q__RA17_22___SOMATIC.MuTect2.vep.FILLOUT.flt.noFFPE.JAM_filtered.vcf', 
+#                      comment='#', sep='\t', header=None)  
 
 
-def main(k14_output, best_input, df_vcf):   
+def main(args):   
   ##main function 
   #
   #
   #
+  #getting the files from args
+  if args.dcfout:
+    dcfout = pd.read_csv(args.dcfout, sep='\t')
+  if args.dcfin:
+    dcfin = pd.read_csv(args.dcfin, sep='\t')
+  if args.xref:
+    df_vcf = pd.read_csv(args.xref, comment='#', sep='\t', header=None)
+
+  num_rows = len(dcfout.index)
+
   final_mutation_index = []
   final_all_clone_trees = []
   #get all possible clone trees and make it directed with root 0
@@ -34,7 +44,7 @@ def main(k14_output, best_input, df_vcf):
   for i in range(num_rows):
     #print("mutation" + str(i))
     #mutation_index is index of the mutation (10.52573509.G.GA)
-    mutation_index = k14_output['mut_index'][i]
+    mutation_index = dcfout['mut_index'][i]
 
     #print(mutation_index)
 
@@ -48,18 +58,18 @@ def main(k14_output, best_input, df_vcf):
 
 
     #parse the state_tree data --> get the state tree for the given mutation
-    state_tree = parse_state_tree(k14_output['state_tree'][i])
+    state_tree = parse_state_tree(dcfout['state_tree'][i])
     #print(state_tree)
 
 
     #chr_x is the tsv file where chromosome number = x
-    chr_x = best_input[best_input['#CHR'] == chr_number]
+    chr_x = dcfin[dcfin['#CHR'] == chr_number]
     #row_number will be the row index of the mutation bin for 52573509 (837)
     row_number = chr_x[(chr_x['START'] < chr_position) & (chr_x['END'] > chr_position)].index[0]
     #print(row_number)
 
     #cn_clones is a dictionary with key: value pairs as the clone number: the allele specific copy numbers
-    cn_clones = get_cn_clones(best_input, row_number)
+    cn_clones = get_cn_clones(dcfin, row_number)
     #print(cn_clones)
 
     #all the clone trees mapped onto a state tree
@@ -81,7 +91,17 @@ def main(k14_output, best_input, df_vcf):
     clone_tree_index.append(i+1)
   
   plot_fractions(df_clone_trees, df_vcf, clone_tree_index)
-  plot_violation(best_input, clone_tree_index)
+  plot_violation(dcfin, clone_tree_index)
 
-#test commit 2
-main(k14_output, best_input, df_vcf)
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--dcfout', type=str, help='csv file with decifer output', required=True)
+  parser.add_argument('--dcfin', type=str, help='csv file with decifer input', required=True)
+  parser.add_argument('--xref', type=str, help='csv file with mutations to subset with decifer files')
+  args = parser.parse_args()
+  main(args)
+
+
+# #test commit 2
+# main(k14_output, best_input, df_vcf)
