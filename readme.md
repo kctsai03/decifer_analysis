@@ -1,4 +1,9 @@
 ## Prerequisites 
+ * python3
+ * numpy
+ * pandas
+ * matplotlib
+ 
 
 ## Usage Instructions
 
@@ -46,7 +51,5 @@ The third input (xref) is a vcf file of high confidence mutations for cross refe
 | ------------| -----------------| -----------------| -------------|
 | 16          |34982228          |A                 | C            |
 | 10          |52573509          |G                 | GA           |
-
-
 
 ## Example
