@@ -33,13 +33,28 @@ def main(args):
     dcfin = pd.read_csv(args.dcfin, sep='\t')
   if args.xref:
     df_vcf = pd.read_csv(args.xref, comment='#', sep='\t', header=None)
+  if args.op1:
+    op1 = f'{args.op1}_valid_clone_trees.tsv'
+  if args.op2:
+    op2 = f'{args.op2}_clone_tree_violations.tsv'
+  if args.plt1:
+    plt1 = f'{args.plt1}_fraction_of_valid_mut.pdf'
+  if args.plt2:
+    plt2 = f'{args.plt2}_num_violations_per_clone_tree.pdf'
+
 
   num_rows = len(dcfout.index)
 
   final_mutation_index = []
   final_all_clone_trees = []
+
   #get all possible clone trees and make it directed with root 0
-  all_clone_trees = mk_directed(get_clone_trees([0, 1, 2, 3]))
+  num_clones = 1
+  for col in dcfin.columns:
+    if 'cn_clone' in col:
+      num_clones += 1
+  ls_vertices = list(range(num_clones))
+  all_clone_trees = mk_directed(get_clone_trees(ls_vertices))
 
   for i in range(num_rows):
     #print("mutation" + str(i))
@@ -83,6 +98,8 @@ def main(args):
         final_mutation_index.append(mutation_index)
   data = {'mut_index': final_mutation_index,'valid_clone_tree': final_all_clone_trees}
   df_clone_trees = pd.DataFrame(data)
+  df_clone_trees.to_csv(op1, sep="\t")
+
 
   #PLOTTING THE RESULTS
   #index of each clone tree (just a list from 1-16)
@@ -90,8 +107,9 @@ def main(args):
   for i in range(len(all_clone_trees)):
     clone_tree_index.append(i+1)
   
-  plot_fractions(df_clone_trees, df_vcf, clone_tree_index)
-  plot_violation(dcfin, clone_tree_index)
+  plot_fractions(df_clone_trees, df_vcf, clone_tree_index, all_clone_trees, plt1)
+  output2 = plot_violation(dcfin, clone_tree_index, all_clone_trees, plt2)
+  output2.to_csv(op2, sep="\t")
 
 
 if __name__ == "__main__":
@@ -99,6 +117,10 @@ if __name__ == "__main__":
   parser.add_argument('--dcfout', type=str, help='csv file with decifer output', required=True)
   parser.add_argument('--dcfin', type=str, help='csv file with decifer input', required=True)
   parser.add_argument('--xref', type=str, help='csv file with mutations to subset with decifer files')
+  parser.add_argument('--op1', type=str, help='output prefix 1 - valid clone trees per mutation locus', required = True)
+  parser.add_argument('--op2', type=str, help='output prefix 2 - clone tree violations: show invalid clone trees, the invalid edge, and the corresponding violating bin', required = True)
+  parser.add_argument('--plt1', type=str, help='output prefix for plot 1 - fraction of valid mutations per clone tree', required = True)
+  parser.add_argument('--plt2', type=str, help='output prefix for plot 2 - number of violations per clone tree', required = True)
   args = parser.parse_args()
   main(args)
 

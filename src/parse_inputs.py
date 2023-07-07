@@ -26,11 +26,6 @@ def parse_state_tree(state_tree_raw):
     state_tree.append(edge_update)
   rm_duplicates(state_tree)
   return state_tree
-
-
-
-
-
 #get copy number clones into a dictionary
 #input: best.seg.ucn.txv
 #row number
@@ -39,7 +34,11 @@ def parse_state_tree(state_tree_raw):
 
 def get_cn_clones(best_input, row_number):
   #cn_clones is a dictionary with key: value pairs as the clone number: the allele specific copy numbers
-  cn_clones = {0: best_input.iloc[row_number]['cn_normal'], 1: best_input.iloc[row_number]['cn_clone1'], 2: best_input.iloc[row_number]['cn_clone2'], 3: best_input.iloc[row_number]['cn_clone3']}
+  cn_clones = {0: best_input.iloc[row_number]['cn_normal']}
+  for col in best_input.columns:
+    if 'cn_clone' in col:
+      s = int(col.replace('cn_clone', ''))
+      cn_clones[s] = best_input.iloc[row_number][col]
 
   for key in cn_clones:
     split = cn_clones[key].split("|")

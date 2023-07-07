@@ -1,7 +1,6 @@
 # checks if a clone tree is the same as the state tree
 
 def is_valid_tree(clone_tree, state_tree):
-  #test 3
   return sorted(clone_tree) == sorted(state_tree)
 
 #converts all clone tree to the state tree
@@ -16,7 +15,6 @@ def map_clone_trees(all_clone_trees, cn_clones):
       updated_tree.append(updated_edge)
     output.append(updated_tree)
   return output
-
 
 #converts a single clone tree to the state tree
 def map_single_clone_tree(clone_tree, cn_clones):

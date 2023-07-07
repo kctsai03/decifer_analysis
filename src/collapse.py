@@ -1,7 +1,6 @@
 #input is a state tree
 #output is a state tree that doesn't have any of the same edges written twice
 
-## test for pull
 def collapse(tree):
   parallel = []
   for edge in tree:
@@ -10,7 +9,6 @@ def collapse(tree):
   return parallel
 
 # remove all duplicate paths for a single tree
-
 
 def rm_duplicates(state_tree):
   for edge in state_tree:

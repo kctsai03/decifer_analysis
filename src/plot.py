@@ -6,12 +6,12 @@
 #
 #
 #df_clone_trees is the valid clone trees file as a dataframe
-import pandas as pd
-from get_clone_trees import mk_directed, get_clone_trees
-from parse_inputs import get_cn_clones
-from check_tree import map_single_clone_tree
+from get_clone_trees import get_clone_trees, mk_directed
 from matplotlib import pyplot as plt
-def plot_fractions(df_clone_trees, df_vcf, clone_tree_index):
+from check_tree import map_single_clone_tree
+from parse_inputs import get_cn_clones
+import pandas as pd
+def plot_fractions(df_clone_trees, df_vcf, clone_tree_index, all_clone_trees, plt1):
 
 
     #list of all the clone trees
@@ -20,8 +20,7 @@ def plot_fractions(df_clone_trees, df_vcf, clone_tree_index):
     #number of mutations that are satisfied by each clone tree - starts off at 0
     mutations_per_ct = []
     
-    #list of all the clone trees
-    all_clone_trees = mk_directed(get_clone_trees([0, 1, 2, 3]))
+
     for i in range(len(all_clone_trees)):
         clone_tree_list.append(str(all_clone_trees[i]))
         mutations_per_ct.append(0)
@@ -44,8 +43,6 @@ def plot_fractions(df_clone_trees, df_vcf, clone_tree_index):
     fraction_per_ct = []
     for num_mut in mutations_per_ct:
         fraction_per_ct.append(num_mut/num_rows)
-    data = {"Clone Tree Number": clone_tree_index,
-                    "Fraction of Mutations w/ Clone Tree": fraction_per_ct}
 
     # Creating histogram
     #x-axis is clone_tree_index [0, 1, 2, 3, ...]
@@ -56,9 +53,10 @@ def plot_fractions(df_clone_trees, df_vcf, clone_tree_index):
     plt.title("Fraction of Mutations per Clone Tree")
     plt.ylim(0, 1.2)
     plt.axhline(y=1, color='red', linestyle='--', linewidth=2)
-    plt.show()
+    plt.savefig(plt1, format="pdf")
 
-def plot_violation(best_input, clone_tree_index): 
+
+def plot_violation(best_input, clone_tree_index, all_clone_trees, plt2): 
     #figure out which clone trees violate the "coming out of nowhere" policy
     #(1, 0) --> (2, 1) can't happen
     #gives a dataframe with clone_tree, violating_edge, and violating_bin
@@ -69,9 +67,6 @@ def plot_violation(best_input, clone_tree_index):
 
     #create data frame for output
     df = pd.DataFrame(columns=['clone_tree', 'violating_edge', 'violating_bin'])
-
-
-    all_clone_trees = mk_directed(get_clone_trees([0, 1, 2, 3]))
 
 
     old_bin_index = best_input.apply(lambda x: f'{x[0]}.{x[1]}.{x[2]}', axis = 1).tolist()
@@ -135,4 +130,5 @@ def plot_violation(best_input, clone_tree_index):
     plt.xlabel("Clone Tree Number")
     plt.ylabel("Number of bins that violate clone tree")
     plt.title("Violations for Clone Tree")
-    plt.show()
+    plt.savefig(plt2, format="pdf")
+    return df

@@ -4,13 +4,12 @@ from collections import deque
 #input is [0, 1, 2, 3]
 #output is [0, 2], [0, 1], [1, 3]
 #[0, 1], [0, 2], [0, 3] etc.
-
 def get_clone_trees(vertices):
   output = []
   for i in vertices:
     for j in vertices:
       prufer_sequence = [i, j]
-      edges = get_prufer_edges(prufer_sequence)
+      edges = get_prufer_edges(prufer_sequence, len(vertices))
       output.append(edges)
   return output
 
@@ -20,11 +19,10 @@ def get_clone_trees(vertices):
 #ex. output [0, 2], [0, 1], [1, 3]
 
 
-def get_prufer_edges(prufer_sequence):
-  num_vertices = 4
+def get_prufer_edges(prufer_sequence, num_vertices):
 
   # create the list array (all the values of the vertices)
-  all_nodes = [0, 1, 2, 3]
+  all_nodes = list(range(num_vertices))
 
   edge_list = []
 
@@ -38,6 +36,21 @@ def get_prufer_edges(prufer_sequence):
         break
   edge_list.append([all_nodes[0], all_nodes[1]])
   return edge_list
+
+
+#makes the edges of an undirected tree a directed tree with root = 0
+
+def mk_directed(all_clone_trees):
+  output = []
+  for tree in all_clone_trees:
+    for edge in tree:
+      if edge[1] == 0:
+        all_clone_trees[all_clone_trees.index(tree)][tree.index(edge)] = [0, edge[0]]
+  for tree in all_clone_trees:
+    tree = reorient_edges(tree)
+    output.append(tree)
+  return output
+
 
 
 
@@ -70,17 +83,3 @@ def reorient_edges(edges):
                 queue.append((neighbor, node))
 
     return directed_edges
-
-
-#makes the edges of an undirected tree a directed tree with root = 0
-
-def mk_directed(all_clone_trees):
-  output = []
-  for tree in all_clone_trees:
-    for edge in tree:
-      if edge[1] == 0:
-        all_clone_trees[all_clone_trees.index(tree)][tree.index(edge)] = [0, edge[0]]
-  for tree in all_clone_trees:
-    tree = reorient_edges(tree)
-    output.append(tree)
-  return output
