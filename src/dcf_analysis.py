@@ -118,7 +118,7 @@ if __name__ == "__main__":
   parser.add_argument('--dcfin', type=str, help='csv file with decifer input', required=True)
   parser.add_argument('--xref', type=str, help='csv file with mutations to subset with decifer files')
   parser.add_argument('--op1', type=str, help='output prefix 1 - valid clone trees per mutation locus', required = True)
-  parser.add_argument('--op2', type=str, help='output prefix 2 - clone tree violations: show invalid clone trees, the invalid edge, and the corresponding violating bin', required = True)
+  parser.add_argument('--op2', type=str, help='output prefix 2 - invalid clone trees, the invalid edge, and the corresponding violating bin', required = True)
   parser.add_argument('--plt1', type=str, help='output prefix for plot 1 - fraction of valid mutations per clone tree', required = True)
   parser.add_argument('--plt2', type=str, help='output prefix for plot 2 - number of violations per clone tree', required = True)
   args = parser.parse_args()
