@@ -80,3 +80,12 @@ test_clone_tree_violations.csv
 | [(0, 2), (0, 1), (1, 3)]  |(1, 3)            |13.33921294.34054659             |
 |[(0, 2), (0, 1), (1, 3)]   | (1, 3)           |13.41220604.41457753             |
 | [(0, 1), (0, 2), (2, 3)]  |(2, 3)            | 13.33921294.34054659            |
+
+test_fraction_of_valid_mut.pdf
+
+![fraction_of_valid_mut](/Users/kyletsai/Desktop/test1.png)
+
+
+test_num_violations_per_clone_tree.pdf
+
+![fraction_of_valid_mut](/Users/kyletsai/Desktop/test2.png)
