@@ -52,4 +52,31 @@ The third input (xref) is a vcf file of high confidence mutations for cross refe
 | 16          |34982228          |A                 | C            |
 | 10          |52573509          |G                 | GA           |
 
-## Example
+## Example 
+
+Using the input files from the data folder:
+
+```
+python dcf_analysis.py --dcfout data/MPAM06_output_K14.tsv --dcfin data/best.seg.ucn.tsv --xref data/Proj_06287_Q__RA17_22___SOMATIC.MuTect2.vep.FILLOUT.flt.noFFPE.JAM_filtered.vcf --op1 test --op2 test --plt1 test --plt2 test
+```
+
+Output:
+
+test_valid_clone_trees.csv
+
+| mut_index                 |valid_clone_tree                 |
+| ----------                |----------------                 |
+| 10.52573509.G.GA          |[(0, 2), (0, 3), (2, 1)]         |
+|10.52589948.C.G	        |[(0, 2), (0, 3), (3, 1)]         |
+| 3.151535316.G.C           |[(0, 1), (0, 2), (0, 3)]         |
+| 3.151535316.G.C           |[(0, 2), (0, 1), (1, 3)]         |
+| 3.151535316.G.C           |[(0, 1), (0, 2), (2, 3)]         |
+| 3.151535316.G.C           | [(0, 1), (0, 3), (3, 2)]        |
+
+test_clone_tree_violations.csv
+
+| clone_tree                | violating_edge   | violating_bin                   |
+| --------------------------| -----------------| -----------------------------   |
+| [(0, 2), (0, 1), (1, 3)]  |(1, 3)            |13.33921294.34054659             |
+|[(0, 2), (0, 1), (1, 3)]   | (1, 3)           |13.41220604.41457753             |
+| [(0, 1), (0, 2), (2, 3)]  |(2, 3)            | 13.33921294.34054659            |
