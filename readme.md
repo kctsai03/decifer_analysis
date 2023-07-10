@@ -83,9 +83,10 @@ test_clone_tree_violations.csv
 
 test_fraction_of_valid_mut.pdf
 
-![fraction_of_valid_mut](/Users/kyletsai/Desktop/test1.png)
+![fraction_of_valid_mut](data/test_fraction_of_valid_mut.png)
+
 
 
 test_num_violations_per_clone_tree.pdf
 
-![fraction_of_valid_mut](/Users/kyletsai/Desktop/test2.png)
+![fraction_of_valid_mut](data/test_num_violations_per_clone_tree.png)
